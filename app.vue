@@ -273,6 +273,10 @@ li .label-wrapper {
 .payment {
   justify-content: center;
 }
+
+.payment .button {
+  background-color: var(--neutral-20);
+}
 </style>
 
 <style>
@@ -314,6 +318,7 @@ body {
   background-color: var(--background);
   font: 16px Google Sans, Helvetica, Arial, sans-serif;
   line-height: 24px;
+  padding-bottom: 60px;
 }
 
 @media (min-width: 960px) {
