@@ -19,10 +19,10 @@ const getAddressPosition = async address => {
 };
 
 const getCurrentPosition = () => {
-  return new Promise(resolve => {
+  return new Promise((resolve, reject) => {
     navigator.geolocation.getCurrentPosition(location => {
       resolve({ lat: location.coords.latitude, lng: location.coords.longitude });
-    });
+    }, reject);
   });
 };
 
@@ -65,11 +65,14 @@ window.onMapsLoaded = async () => {
   map = new google.maps.Map(map_ref.value, {
     zoom: 8,
     minZoom: 1,
+    center: { lat: 37.37, lng: -122.04 },
     disableDefaultUI: true,
     gestureHandling: 'greedy'
   });
   if (!navigator.geolocation) return console.warn('Geolocation API is not available');
-  const position = await getCurrentPosition();
+  const position = await getCurrentPosition().catch(() =>
+    alert('Unable to access current location. Make sure location permission allowed for this site.')
+  );
   map.panTo(position);
   const marker = createMarker(position);
   const pickup_position = await getAddressPosition(pickup_address.value);

@@ -107,16 +107,6 @@ video {
   transform: scale(1);
 }
 
-.dialog-root.fullscreen .dialog {
-  width: 100%;
-  height: 100%;
-  border-radius: 0;
-}
-
-.dialog-root:not(.fullscreen) {
-  padding: 16px;
-}
-
 .dialog > .title {
   text-align: center;
   padding: 0 24px 16px 24px;
