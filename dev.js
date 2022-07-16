@@ -144,6 +144,8 @@ if (process.env.DEV_MODE) {
   };
   console.clear();
   console.log(colors.green, `http://localhost:${port}/${index}`, colors.reset);
+} else {
+  fs.writeFile(index, html.replace(/>\s+</g, '><'));
 }
 
 esbuild.build(config);
