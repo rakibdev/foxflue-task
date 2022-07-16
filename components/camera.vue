@@ -26,7 +26,7 @@ const open = async () => {
   try {
     opened.value = true;
     const stream = await navigator.mediaDevices.getUserMedia({ video: true, audio: false });
-    video_ref.value.src = stream;
+    video_ref.value.srcObject = stream;
   } catch (error) {
     opened.value = false;
     alert('Unable to use camera: ' + error);
