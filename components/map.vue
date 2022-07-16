@@ -12,10 +12,11 @@ let map = null;
 
 const getAddressPosition = async address => {
   const response = await fetch(
-    `http://api.positionstack.com/v1/forward?access_key=58ec0925cdd441256bbf914e2cdd609b&query=${address}`
+    `https://nominatim.openstreetmap.org/search?q=${address}&format=geocodejson`
   );
-  const { data } = await response.json();
-  return { lat: data[0].latitude, lng: data[0].longitude };
+  const result = await response.json();
+  const [lng, lat] = result.features[0].geometry.coordinates;
+  return { lat, lng };
 };
 
 const getCurrentPosition = () => {

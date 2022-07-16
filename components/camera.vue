@@ -1,6 +1,6 @@
 <template>
   <div :class="['dialog-root', { open: opened }]" @click.self="onClickOutside()">
-    <div class="dialog" ref="dialog_ref" :style="{ width: fullscreen ? '' : width }">
+    <div class="dialog" ref="dialog_ref">
       <h3 class="title">Camera</h3>
       <div class="body">
         <video ref="video_ref" autoplay>Video stream not available.</video>

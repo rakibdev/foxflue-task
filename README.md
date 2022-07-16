@@ -13,7 +13,7 @@ Notes
 - Devices are from v-for loop, payments subtotal is dynamically calculated.
 - Material Icons Outlined varient used.
 - Added blue dot and distance polyline in maps
-- Used `positionstack` api to get position(lat, lng) of pickup_address. As google's offical geocoder api requires billing.
+- Used nominatim to get geolocation of address as Google geocoder requires billing.
 - `state.js` file is newer alternative to Vuex for Vue 3. Used for sharing "pickup_distance, pickup_address" between `map.vue` and `app.vue`. And devices array in that file.
 - The design in PDF isn't actually good UI in terms of usability. Such as it has primary color, button height, background colors, list item top border, button label below icon (should be side by side), icon-button mixed circle and square, many more inconsistency. But I guess this just to test so I coded exactly same.
-- Used toLocaleString() only 2 lines of code. no need for "date-fns"
+- Used toLocaleString() to seperate month, day, time only 3 lines of code. no need for "date-fns"

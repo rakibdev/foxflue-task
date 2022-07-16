@@ -15,6 +15,7 @@ const html = `<!DOCTYPE html>
   <meta charset="utf-8" />
   <meta content="width=device-width, initial-scale=1" name="viewport" />
   <title>Foxflue Task</title>
+  <meta http-equiv="Content-Security-Policy" content="upgrade-insecure-requests" />
   <link rel="stylesheet" href="app.css" />
 </head>
 <body>
