@@ -5,7 +5,7 @@
     <div class="row">
       <chip label="Offer #T216" />
       <chip label="Pending payment" filled class="payment-chip" />
-      <chip label="Assigned" />
+      <chip label="Assigned" filled class="assigned-chip" />
     </div>
 
     <ul class="row list shedule">
@@ -48,9 +48,6 @@
           </p>
         </div>
         <btn filled class="go" label="GO" />
-      </li>
-      <li class="options">
-        <btn v-for="{ label, icon } in options" :label="label" :icon="icon" />
       </li>
     </ul>
   </section>
@@ -105,6 +102,10 @@
       </li>
     </ul>
   </section>
+
+  <div class="bottom-bar row">
+    <btn v-for="{ label, icon } in options" :label="label" :icon="icon" />
+  </div>
 </template>
 
 <script setup>
@@ -159,12 +160,32 @@ header .icon {
 }
 
 header .title,
-.options .button {
+.bottom-bar .button {
   flex: 1;
 }
 
-header .button {
-  color: var(--pink);
+header .button,
+.devices .button {
+  --color: var(--pink);
+}
+
+.bottom-bar {
+  background-color: #fff;
+  box-shadow: 0 -1px 3px rgb(0 0 0 / 20%);
+  position: fixed;
+  bottom: 0;
+  height: 60px;
+  display: flex;
+  align-items: center;
+  z-index: 10;
+  left: 50%;
+  transform: translateX(-50%);
+}
+
+@media (max-width: 960px) {
+  .bottom-bar {
+    width: 100%;
+  }
 }
 
 .row {
@@ -224,6 +245,11 @@ li .label-wrapper {
   color: var(--brown-20);
 }
 
+.assigned-chip.button {
+  --color: var(--neutral-90);
+  color: var(--neutral-20);
+}
+
 .devices .photo {
   height: 64px;
   margin-right: 16px;
@@ -244,13 +270,8 @@ li .label-wrapper {
   --color: var(--green);
 }
 
-.devices .button {
-  --color: var(--pink);
-}
-
 .payment {
   justify-content: center;
-  border-top: 1px solid var(--outline);
 }
 </style>
 
@@ -266,16 +287,16 @@ li .label-wrapper {
 }
 
 body {
-  --primary-90: #c8e6ff;
+  --primary-90: #daecfd;
   --primary-70: #6fadff;
-  --primary: #005fb1;
+  --primary: #0086f2;
   --primary-20: #00315f;
 
-  --brown-90: #ffddaa;
-  --brown: #755a2e;
+  --brown-90: #fcd7a0;
+  --brown: #976f37;
   --brown-20: #422c04;
 
-  --pink: #ab00a4;
+  --pink: #ff0459;
   --green: #71e480;
 
   --neutral-95: #eaf2fc;
@@ -287,6 +308,8 @@ body {
   --foreground: var(--neutral-20);
   --outline: var(--neutral-90);
 
+  --app-width: 600px;
+
   color: var(--foreground);
   background-color: var(--background);
   font: 16px Google Sans, Helvetica, Arial, sans-serif;
@@ -295,8 +318,12 @@ body {
 
 @media (min-width: 960px) {
   .app {
-    width: 600px;
     margin: 8px auto;
+  }
+
+  .app,
+  .bottom-bar {
+    width: var(--app-width);
   }
 }
 
@@ -340,7 +367,7 @@ p {
 }
 
 .icon {
-  font: 20px Material Icons Outlined, Material Icons;
+  font: 24px Material Icons Outlined, Material Icons;
   color: currentColor;
   vertical-align: middle;
 }
