@@ -15,7 +15,7 @@
 </template>
 
 <script setup>
-import { ref, onMounted } from 'vue';
+import { ref } from 'vue';
 
 const opened = ref(false);
 const dialog_ref = ref(false);
@@ -26,45 +26,31 @@ const open = async () => {
   try {
     opened.value = true;
     const stream = await navigator.mediaDevices.getUserMedia({ video: true, audio: false });
-    video_ref.value.srcObject = stream;
+    video_ref.value.src = stream;
   } catch (error) {
-    alert('Video ' + error);
     opened.value = false;
+    alert('Unable to use camera: ' + error);
   }
 };
 
 const capture = () => {
+  const width = canvas_ref.value.width;
+  const height = canvas_ref.value.height;
   const context = canvas_ref.value.getContext('2d');
-  context.drawImage(player, 0, 0, canvas_ref.value.width, canvas_ref.value.height);
+  context.drawImage(video_ref.value, 0, 0, width, height);
 
-  if (width && height) {
-    canvas.width = width;
-    canvas.height = height;
-    context.drawImage(video, 0, 0, width, height);
-
-    var data = canvas.toDataURL('image/png');
-    photo.setAttribute('src', data);
-  } else {
-    clearphoto();
-  }
-};
-
-onMounted(() => {
-  video_ref.value.addEventListener(
-    'canplay',
-    event => {
-      if (!streaming) {
-        const height = video.videoHeight / (video.videoWidth / width);
-        video_ref.value.setAttribute('width', width);
-        video_ref.value.setAttribute('height', height);
-        canvas_ref.setAttribute('width', width);
-        canvas_ref.setAttribute('height', height);
-        streaming = true;
-      }
-    },
-    false
+  const link = document.createElement('a');
+  link.setAttribute('download', 'capture.png');
+  link.setAttribute(
+    'href',
+    canvas_ref.value.toDataURL('image/png').replace('image/png', 'image/octet-stream')
   );
-});
+  link.click();
+
+  // clear canvas
+  context.fillStyle = '#fff';
+  context.fillRect(0, 0, width, height);
+};
 
 const onClickOutside = () => {
   dialog_ref.value.animate(

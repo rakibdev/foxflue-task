@@ -1,13 +1,10 @@
 <template>
-  <btn class="chip" :filled="selected" :label="label" :start-icon="startIcon" />
+  <btn class="chip" :label="label" />
 </template>
 
 <script setup>
 defineProps({
-  label: [String, Number],
-  startIcon: String,
-  selected: Boolean,
-  color: { type: String, default: 'primary' }
+  label: [String, Number]
 });
 </script>
 

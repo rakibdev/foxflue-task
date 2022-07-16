@@ -1,6 +1,7 @@
 import { reactive, toRefs } from 'vue';
 
 const state = reactive({
+  time: 1657983121750,
   pickup_address: '3001 Fulton St, Brooklyn, NY 11208, USA',
   pickup_distance: null,
   devices: [

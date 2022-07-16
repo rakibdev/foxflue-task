@@ -3,13 +3,11 @@ import { ripple } from './directives.js';
 import App from './app.vue';
 import Button from './components/button.vue';
 import Chip from './components/chip.vue';
-import Dialog from './components/dialog.vue';
 
 const app = createApp(App);
 app.directive('ripple', ripple);
 app.component('btn', Button);
 app.component('chip', Chip);
-app.component('dialog-view', Dialog);
 app.mount('.app');
 
 // used for hiding icons until font loaded.

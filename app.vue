@@ -1,37 +1,58 @@
 <template>
+  <google-map />
+  <camera ref="camera_ref" />
   <section>
-    <google-map />
-    <camera ref="camera_ref" />
-    <div>
+    <div class="row">
       <chip label="Offer #T216" />
-      <chip label="Pending payment" />
+      <chip label="Pending payment" filled class="payment-chip" />
       <chip label="Assigned" />
     </div>
-    <ul class="list outlined">
+
+    <ul class="row list shedule">
       <li>
+        <span class="icon">date_range</span>
+        <div class="label-wrapper">
+          <p class="body-small">Date</p>
+          <p class="title">{{ parseTime(time).day }}</p>
+        </div>
+      </li>
+      <li>
+        <span class="icon">schedule</span>
+        <div class="label-wrapper">
+          <p class="body-small">Time</p>
+          <p class="title">{{ parseTime(time).time }}</p>
+        </div>
+      </li>
+    </ul>
+
+    <div class="row alert title">
+      You will earn<span class="primary-label earning-amount">$30</span>
+    </div>
+
+    <ul class="list outlined">
+      <li class="customer">
         <div class="label-wrapper">
           <p class="body-small">Customer</p>
-          <p class="label">Christopher Nunez</p>
+          <p>Christopher Nunez</p>
           <p class="body-small">+1 (516) 812-9200</p>
         </div>
-        <btn icon="mail" label="Message" />
-        <btn icon="call" label="Call" />
+        <btn filled icon="mail" label="Msg" />
+        <btn filled icon="call" label="Call" />
       </li>
       <li>
         <div class="label-wrapper">
           <p class="body-small">Pickup address</p>
-          <p class="label">{{ pickup_address }}</p>
+          <p>{{ pickup_address }}</p>
           <p class="body-small primary-label" v-if="pickup_distance">
             <span class="icon">pin_drop</span> {{ pickup_distance }} miles away from my location
           </p>
         </div>
-        <btn label="GO" />
+        <btn filled class="go" label="GO" />
+      </li>
+      <li class="options">
+        <btn v-for="{ label, icon } in options" :label="label" :icon="icon" />
       </li>
     </ul>
-
-    <div class="options">
-      <btn v-for="{ label, icon } in options" :secondary-label="label" :icon="icon" />
-    </div>
   </section>
 
   <section class="devices">
@@ -44,11 +65,11 @@
       <li v-for="{ label, image, features, price } in devices">
         <img class="photo" :src="image" loading="lazy" />
         <div class="label-wrapper">
-          <div class="label">{{ label }}</div>
-          <div class="description body-small">{{ features.join(' - ') }}</div>
-          <div class="body-small primary-label">Estimated offer ${{ price }}</div>
+          <p>{{ label }}</p>
+          <p class="body-small">{{ features.join(' - ') }}</p>
+          <p class="body-small primary-label">Estimated offer ${{ price }}</p>
         </div>
-        <btn label="Start inspection" @click="camera_ref.open()" />
+        <btn filled label="Start inspection" @click="camera_ref.open()" />
       </li>
     </ul>
   </section>
@@ -62,24 +83,25 @@
     <ul class="list">
       <li>
         <div class="label-wrapper">
-          <div class="label">Subtotal</div>
-          <div class="description body-small">{{ devices.length }} Devices</div>
+          <p>Subtotal</p>
+          <p class="body-small">{{ devices.length }} Devices</p>
         </div>
         ${{ subtotal }}
       </li>
       <li>
         <div class="label-wrapper">
-          <div class="label">Payment Method</div>
-          <div class="description body-small">
-            Cashapp: <span class="primary-label">$scga12</span>
-          </div>
+          <p>Payment Method</p>
+          <p class="body-small">Cashapp: <span class="primary-label">$scga12</span></p>
         </div>
       </li>
       <li>
         <div class="label-wrapper">
-          <div class="label">Total</div>
+          <p>Total</p>
         </div>
         ${{ subtotal }}
+      </li>
+      <li class="payment">
+        <btn filled label="Send payment" />
       </li>
     </ul>
   </section>
@@ -91,7 +113,7 @@ import Camera from './components/camera.vue';
 import { ref, computed } from 'vue';
 import { useState } from './state.js';
 
-const { devices, pickup_address, pickup_distance } = useState();
+const { devices, pickup_address, pickup_distance, time } = useState();
 const camera_ref = ref(null);
 
 const subtotal = computed(() =>
@@ -105,6 +127,14 @@ const options = [
   { label: 'Earnings', icon: 'paid' },
   { label: 'Account', icon: 'account_circle' }
 ];
+
+const parseTime = () => {
+  const date = new Date(time.value);
+  return {
+    day: date.toLocaleString('en-us', { month: 'long', day: 'numeric' }),
+    time: date.toLocaleString('en-us', { hour: 'numeric', hour12: true })
+  };
+};
 </script>
 
 <style scoped>
@@ -116,8 +146,7 @@ section + section {
   margin-top: 8px;
 }
 
-header,
-.options {
+header {
   height: 40px;
   padding: 0 16px;
   display: flex;
@@ -138,6 +167,13 @@ header .button {
   color: var(--pink);
 }
 
+.row {
+  display: flex;
+  justify-content: center;
+  gap: 16px;
+  padding: 16px;
+}
+
 .list {
   list-style: none;
   margin: 0;
@@ -149,7 +185,6 @@ header .button {
 }
 
 li {
-  width: 100%;
   min-height: 40px;
   padding: 8px 24px;
   display: flex;
@@ -160,22 +195,62 @@ li {
 
 li .label-wrapper {
   flex: 1;
-  overflow: hidden;
-}
-
-li :is(.label, .description) {
-  text-overflow: ellipsis;
-  overflow: hidden;
-  white-space: nowrap;
 }
 
 .primary-label {
   color: var(--primary);
 }
 
+.shedule .icon {
+  color: var(--primary);
+  font-size: 40px;
+  margin-right: 16px;
+}
+
+.alert {
+  background: var(--primary-90);
+  border: 1px solid var(--primary);
+  border-radius: 9px;
+  margin: 0 40px;
+  padding: 16px 40px;
+}
+
+.alert .earning-amount {
+  margin-left: auto;
+}
+
+.payment-chip.button {
+  --color: var(--brown-90);
+  color: var(--brown-20);
+}
+
 .devices .photo {
   height: 64px;
   margin-right: 16px;
+}
+
+.customer .button {
+  --color: var(--neutral-90);
+  color: var(--primary);
+}
+
+.customer .button + .button {
+  margin-left: 16px;
+}
+
+.go {
+  height: 64px;
+  font-size: 20px;
+  --color: var(--green);
+}
+
+.devices .button {
+  --color: var(--pink);
+}
+
+.payment {
+  justify-content: center;
+  border-top: 1px solid var(--outline);
 }
 </style>
 
@@ -191,53 +266,26 @@ li :is(.label, .description) {
 }
 
 body {
-  --primary-95: #eaf1ff;
-  --primary-90: #d3e3ff;
-  --primary-80: #a4c8ff;
+  --primary-90: #c8e6ff;
   --primary-70: #6fadff;
-  --primary-60: #2692ff;
-  --primary-50: #0077db;
   --primary: #005fb1;
-  --primary-30: #004787;
   --primary-20: #00315f;
-  --primary-10: #001c3b;
 
-  --brown-95: #ffeed6;
   --brown-90: #ffddaa;
-  --brown-80: #e4c18c;
-  --brown-70: #c7a673;
-  --brown-60: #ab8c5b;
-  --brown-50: #8f7244;
   --brown: #755a2e;
-  --brown-30: #5b4319;
   --brown-20: #422c04;
-  --brown-10: #281800;
 
-  --pink-95: #ffebf8;
-  --pink-90: #ffd6f4;
-  --pink-80: #ffabf0;
-  --pink-70: #ff77ef;
-  --pink-60: #ff08f4;
-  --pink-50: #d500cd;
   --pink: #ab00a4;
-  --pink-30: #82007d;
-  --pink-20: #5c0058;
-  --pink-10: #390037;
+  --green: #71e480;
 
   --neutral-95: #eaf2fc;
   --neutral-90: #dbe3ed;
-  --neutral-80: #bfc7d0;
-  --neutral-70: #a4acb5;
-  --neutral-60: #8a929b;
-  --neutral-50: #707880;
   --neutral: #575f67;
-  --neutral-30: #404850;
   --neutral-20: #293138;
-  --neutral-10: #141c23;
 
   --background: var(--neutral-95);
   --foreground: var(--neutral-20);
-  --outline: var(--neutral-80);
+  --outline: var(--neutral-90);
 
   color: var(--foreground);
   background-color: var(--background);
@@ -281,17 +329,9 @@ p {
   margin: 0;
 }
 
-.title,
-.title-large {
-  font-weight: bold;
-}
-
 .title {
   font-size: 18px;
-}
-
-.title-large {
-  font-size: 24px;
+  font-weight: bold;
 }
 
 .body-small {
@@ -299,15 +339,8 @@ p {
   color: var(--neutral);
 }
 
-hr {
-  background: var(--neutral-80);
-  border-width: 0;
-  height: 1px;
-  margin: 8px 0;
-}
-
 .icon {
-  font: 24px Material Icons Outlined, Material Icons;
+  font: 20px Material Icons Outlined, Material Icons;
   color: currentColor;
   vertical-align: middle;
 }
@@ -318,15 +351,6 @@ hr {
 
 button {
   -webkit-tap-highlight-color: transparent;
-}
-
-a {
-  color: var(--primary);
-}
-
-a:is(:hover, :focus) {
-  background-color: var(--primary-90);
-  outline: none;
 }
 
 .ripple-container {
