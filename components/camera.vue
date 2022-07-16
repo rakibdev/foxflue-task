@@ -1,0 +1,155 @@
+<template>
+  <div :class="['dialog-root', { open: opened }]" @click.self="onClickOutside()">
+    <div class="dialog" ref="dialog_ref" :style="{ width: fullscreen ? '' : width }">
+      <h3 class="title">Camera</h3>
+      <div class="body">
+        <video ref="video_ref" autoplay>Video stream not available.</video>
+        <canvas ref="canvas_ref" width="320" height="240" />
+      </div>
+      <div class="actions">
+        <btn label="Cancel" @click="opened = false" />
+        <btn label="Capture" @click="capture" />
+      </div>
+    </div>
+  </div>
+</template>
+
+<script setup>
+import { ref, onMounted } from 'vue';
+
+const opened = ref(false);
+const dialog_ref = ref(false);
+const video_ref = ref(null);
+const canvas_ref = ref(null);
+
+const open = async () => {
+  try {
+    opened.value = true;
+    const stream = await navigator.mediaDevices.getUserMedia({ video: true, audio: false });
+    video_ref.value.srcObject = stream;
+  } catch (error) {
+    alert('Video ' + error);
+    opened.value = false;
+  }
+};
+
+const capture = () => {
+  const context = canvas_ref.value.getContext('2d');
+  context.drawImage(player, 0, 0, canvas_ref.value.width, canvas_ref.value.height);
+
+  if (width && height) {
+    canvas.width = width;
+    canvas.height = height;
+    context.drawImage(video, 0, 0, width, height);
+
+    var data = canvas.toDataURL('image/png');
+    photo.setAttribute('src', data);
+  } else {
+    clearphoto();
+  }
+};
+
+onMounted(() => {
+  video_ref.value.addEventListener(
+    'canplay',
+    event => {
+      if (!streaming) {
+        const height = video.videoHeight / (video.videoWidth / width);
+        video_ref.value.setAttribute('width', width);
+        video_ref.value.setAttribute('height', height);
+        canvas_ref.setAttribute('width', width);
+        canvas_ref.setAttribute('height', height);
+        streaming = true;
+      }
+    },
+    false
+  );
+});
+
+const onClickOutside = () => {
+  dialog_ref.value.animate(
+    { transform: ['scale(1)', 'scale(1.03)', 'scale(1)'] },
+    { duration: 180 }
+  );
+};
+
+defineExpose({ open });
+</script>
+
+<style scoped>
+canvas {
+  display: none;
+}
+
+video {
+  width: 100%;
+}
+
+.dialog-root {
+  position: fixed;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background-color: rgb(0 0 0 / 30%);
+  visibility: hidden;
+  opacity: 0;
+  transition-property: visibility, opacity;
+  transition-duration: 300ms;
+  z-index: 100;
+}
+
+.dialog-root.open {
+  visibility: visible;
+  opacity: 1;
+}
+
+.dialog {
+  width: 400px;
+  max-height: 100%;
+  padding: 16px 0;
+  border-radius: 30px;
+  background-color: var(--background);
+  transform: scale(0.7);
+  transition: transform 300ms;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden; /* hide round corner scrollbar overflow */
+}
+
+.dialog-root.open .dialog {
+  transform: scale(1);
+}
+
+.dialog-root.fullscreen .dialog {
+  width: 100%;
+  height: 100%;
+  border-radius: 0;
+}
+
+.dialog-root:not(.fullscreen) {
+  padding: 16px;
+}
+
+.dialog > .title {
+  text-align: center;
+  padding: 0 24px 16px 24px;
+}
+
+.dialog > .body {
+  flex: 1;
+  padding: 0 24px;
+  overflow-y: auto;
+  overscroll-behavior: contain;
+}
+
+.dialog > .actions {
+  display: flex;
+  justify-content: flex-end;
+  padding: 16px 24px 0 24px;
+}
+
+.dialog > .actions .button + .button {
+  margin-left: 10px;
+}
+</style>
