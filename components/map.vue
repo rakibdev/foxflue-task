@@ -89,7 +89,7 @@ window.onMapsLoaded = async () => {
 const loadGoogleMaps = () => {
   const script = document.createElement('script');
   script.src =
-    'https://maps.googleapis.com/maps/api/js?key=AIzaSyCNSwQBpPvd_ZuR93-_Et2o8MvMsHR7CeY&callback=onMapsLoaded&v=weekly';
+    'https://maps.googleapis.com/maps/api/js?key=AIzaSyDabUpulBWYH2XVCDtfEcss0mCPASkvdEg&callback=onMapsLoaded&v=weekly';
   script.async = true;
   document.head.appendChild(script);
 };
